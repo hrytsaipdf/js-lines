@@ -44,32 +44,30 @@ const Utils = {
 
 
 function init(container, linesConfig) {
-    const lineHeight = container.offsetHeight / linesConfig.length;
     linesConfig.forEach(config => {
-        const line = createLine(config, lineHeight);
+        const line = createLine(config, 100 / linesConfig.length);
         drawElements(line, config.elements);
         container.appendChild(line);
         runAutoUpdateForLine(line, config.updateTime);
     });
 }
 
-function createLine(config, heightPx) {
+function createLine(config, heightPercents) {
     const line = document.createElement('div');
     line.className = 'line';
     Utils.css(line, {
         backgroundColor: config.background,
-        minHeight: heightPx + 'px',
-        height: heightPx + 'px'
+        minHeight: 'calc(' + heightPercents + '%)',
+        height: 'calc(' + heightPercents + '%)'
     });
 
     return line;
 }
 
 function drawElements(line, elementsConfig) {
-    elementsConfig.forEach(config => {
-        const element = createElement(config);
-        line.appendChild(element);
-    });
+    elementsConfig
+        .map(config => createElement(config))
+        .forEach(line.appendChild.bind(line));
 }
 
 function createElement(config) {
@@ -77,9 +75,7 @@ function createElement(config) {
     element.className = 'element';
     Utils.css(element, {
         backgroundColor: config.background,
-        width: config.width + '%',
-        minHeight: '100%',
-        height: '100%'
+        width: config.width + '%'
     });
 
     return element;
